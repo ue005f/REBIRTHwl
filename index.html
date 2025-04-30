@@ -24,11 +24,36 @@
       padding: 1em 2em;
       font-size: 1.2em;
       margin-top: 1em;
+      cursor: pointer;
     }
-    #result {
-      margin-top: 2em;
+    #result-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(0,0,0,0.7);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      visibility: hidden;
+    }
+    #result-box {
+      background-color: white;
+      padding: 2em 3em;
+      border-radius: 15px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.3);
+      text-align: center;
       font-size: 1.5em;
-      color: #d60000;
+    }
+    #result-box h2 {
+      margin-bottom: 1em;
+    }
+    #close-btn {
+      margin-top: 1em;
+      font-size: 1em;
+      padding: 0.5em 1.5em;
     }
   </style>
 </head>
@@ -39,7 +64,13 @@
 
   <button onclick="drawPrize()">抽獎！</button>
 
-  <div id="result"></div>
+  <!-- 抽獎結果遮罩 -->
+  <div id="result-overlay">
+    <div id="result-box">
+      <h2 id="result-text"></h2>
+      <button id="close-btn" onclick="closeResult()">確認</button>
+    </div>
+  </div>
 
   <script>
     // 初始化獎項
@@ -52,9 +83,10 @@
     ];
 
     const prizeListEl = document.getElementById('prize-list');
-    const resultEl = document.getElementById('result');
+    const resultTextEl = document.getElementById('result-text');
+    const resultOverlayEl = document.getElementById('result-overlay');
 
-    // 顯示初始獎項列表
+    // 顯示獎項清單
     const countMap = {};
     prizes.forEach(p => countMap[p] = (countMap[p] || 0) + 1);
     for (const [name, count] of Object.entries(countMap)) {
@@ -63,15 +95,20 @@
       prizeListEl.appendChild(li);
     }
 
-    // 抽獎
+    // 抽獎邏輯
     function drawPrize() {
       if (prizes.length === 0) {
-        resultEl.textContent = '所有獎項都已抽完！';
-        return;
+        resultTextEl.textContent = '所有獎項都已抽完！';
+      } else {
+        const index = Math.floor(Math.random() * prizes.length);
+        const prize = prizes.splice(index, 1)[0];
+        resultTextEl.textContent = `恭喜你抽中：${prize}！`;
       }
-      const index = Math.floor(Math.random() * prizes.length);
-      const prize = prizes.splice(index, 1)[0];
-      resultEl.textContent = `恭喜你抽中：${prize}！`;
+      resultOverlayEl.style.visibility = 'visible';
+    }
+
+    function closeResult() {
+      resultOverlayEl.style.visibility = 'hidden';
     }
   </script>
 </body>
