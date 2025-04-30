@@ -59,7 +59,7 @@
     prizes.forEach(p => countMap[p] = (countMap[p] || 0) + 1);
     for (const [name, count] of Object.entries(countMap)) {
       const li = document.createElement('li');
-      li.textContent = `${name} × ${count}`;
+      li.textContent = `${name}`;
       prizeListEl.appendChild(li);
     }
 
