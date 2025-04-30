@@ -2,13 +2,14 @@
 <html lang="zh-Hant">
 <head>
   <meta charset="UTF-8">
-  <title>抽獎活動</title>
+  <title>REBIRTH</title>
   <style>
     body {
       font-family: sans-serif;
       text-align: center;
       padding: 2em;
-      background-color: #f9f9f9;
+      background-color: #0a0a0a;
+      font-family:Impact;
     }
     h1 {
       color: #333;
@@ -21,11 +22,22 @@
       margin: 0.3em 0;
     }
     button {
-      padding: 1em 2em;
-      font-size: 1.2em;
+      padding: 4.5em 4.5em;
       margin-top: 1em;
       cursor: pointer;
+      border:0;
+    
+      color:0a0a0a;
     }
+    
+    .bbbb{
+     padding: 4.5em 4.5em; background-image:url(https://images.plurk.com/4UB2CNUs0hf90itOxMoICZ.png);
+ background-size:cover;
+    }
+    .xxxx{
+        border-radius:50px;
+    }
+    
     #result-overlay {
       position: fixed;
       top: 0;
@@ -40,8 +52,8 @@
       visibility: hidden;
     }
     #result-box {
-      background-color: white;
-      padding: 2em 3em;
+      background-color: #c5c5c5;
+      padding: 10em 10em;
       border-radius: 15px;
       box-shadow: 0 0 20px rgba(0,0,0,0.3);
       text-align: center;
@@ -58,17 +70,21 @@
   </style>
 </head>
 <body>
-  <h1>抽獎活動</h1>
-  <h3>獎項清單</h3>
-  <ul id="prize-list"></ul>
-
-  <button onclick="drawPrize()">抽獎！</button>
+  <h1></h1>
+  <h3></h3>
+  <br><br><br>
+  <div>
+      <img src="https://images.plurk.com/5vhJ5HV6U6sz20yNZYIhde.png" width=80%>
+  </div>
+  
+  <button onclick="drawPrize()" class="bbbb"></button>
+  <ul id="prize-list"></ul>  
 
   <!-- 抽獎結果遮罩 -->
   <div id="result-overlay">
     <div id="result-box">
       <h2 id="result-text"></h2>
-      <button id="close-btn" onclick="closeResult()">確認</button>
+      <button id="close-btn" onclick="closeResult()" class="xxxx">X</button>
     </div>
   </div>
 
@@ -102,7 +118,7 @@
       } else {
         const index = Math.floor(Math.random() * prizes.length);
         const prize = prizes.splice(index, 1)[0];
-        resultTextEl.textContent = `恭喜你抽中：${prize}！`;
+        resultTextEl.textContent = `！${prize}！`;
       }
       resultOverlayEl.style.visibility = 'visible';
     }
