@@ -2,171 +2,77 @@
 <html lang="zh-Hant">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>REBRITH轉盤</title>
+  <title>抽獎活動</title>
   <style>
     body {
       font-family: sans-serif;
       text-align: center;
-      background: #2a252b;
-      padding: 2rem;
-      font-family:"微軟正黑體" ;
-      color: #f2e8e5;
-
+      padding: 2em;
+      background-color: #f9f9f9;
     }
-    .wheel-container {
-      position: relative;
-      display: inline-block;
+    h1 {
+      color: #333;
     }
-    canvas {
-      border-radius: 50%;
-      transition: transform 0.5s ease-out;
-      border:2px solid #873a50 ;
-
+    ul {
+      list-style: none;
+      padding: 0;
     }
-    #pointer {
-      position: absolute;
-      top: 190px;
-      left: 96%;
-      width: 0;
-      height: 0;
-      border-top: 20px solid transparent;
-      border-right: 40px solid #c3554a;
-      border-bottom: 20px solid transparent;
-      z-index: 10;
-      border-radius: 5px;
+    li {
+      margin: 0.3em 0;
     }
     button {
-      font-size: 1.2rem;
-      padding: 10px 20px;
-      margin-top: 20px;
-      background-color: #c5564b;
-      border-radius: 50px;
-      border-color: #d67655 #d67655;
-      color: #f2e8e5;
-      font-family:Impact;
+      padding: 1em 2em;
+      font-size: 1.2em;
+      margin-top: 1em;
     }
-    h2 {
-      margin-top: 20px;
-    }
-
-    .tttt{
-      background-color: #f2e8e5;
-      width:130px ;
-      text-align:left ;
-      border-left: 20px solid #f2e8e5;
-      position: fixed;
-      top:20% ;
-      color: #2a252b;
-      font-weight:550 ;
-border-radius: 10px;
-
+    #result {
+      margin-top: 2em;
+      font-size: 1.5em;
+      color: #d60000;
     }
   </style>
 </head>
 <body>
-  <h1></h1><br>
-  <div class="wheel-container">
-    <div id="pointer"></div>
-    <canvas id="wheel" width="400" height="400"></canvas>
-  </div>
-  <br>
-  <button onclick="spin()">S T A R T</button>
-  <h2 id="result"></h2>
+  <h1>抽獎活動</h1>
+  <h3>獎項清單</h3>
+  <ul id="prize-list"></ul>
 
-  <div class="tttt">
-    <br>面紙：A<br>專刊：B<br>電子雞吊飾：C<br>貼紙：D<br>袋子：E<br><br>
+  <button onclick="drawPrize()">抽獎！</button>
 
-  </div>
-
- 
+  <div id="result"></div>
 
   <script>
-    const options = [
-      { label: "A", weight: 120 },
-      { label: "B", weight: 1 },
-      { label: "C", weight: 20 },
-      { label: "D", weight: 2 },
-      { label: "E", weight: 5 },
+    // 初始化獎項
+    const prizes = [
+      ...Array(120).fill('面紙'),
+      ...Array(1).fill('專刊'),
+      ...Array(20).fill('電子雞吊飾'),
+      ...Array(2).fill('貼紙'),
+      ...Array(5).fill('袋子')
     ];
 
-    const canvas = document.getElementById("wheel");
-    const ctx = canvas.getContext("2d");
-    const center = canvas.width / 2;
-    const radius = center - 10;
-    const colors = ["#5c5677", "#c59b4e", "#635fa2", "#909eb9", "#64418c"];
-    let totalWeight = options.reduce((sum, opt) => sum + opt.weight, 0);
-    let spinning = false;
-    let currentRotation = 0;
+    const prizeListEl = document.getElementById('prize-list');
+    const resultEl = document.getElementById('result');
 
-    function drawWheel() {
-      let startAngle = 0;
-      for (let i = 0; i < options.length; i++) {
-        const segmentAngle = (options[i].weight / totalWeight) * 2 * Math.PI;
-        const endAngle = startAngle + segmentAngle;
-
-        // 彩色區塊
-        ctx.beginPath();
-        ctx.moveTo(center, center);
-        ctx.arc(center, center, radius, startAngle, endAngle);
-        ctx.fillStyle = colors[i % colors.length];
-        ctx.fill();
-        ctx.stroke();
-
-        // 文字
-        ctx.save();
-        ctx.translate(center, center);
-        ctx.rotate(startAngle + segmentAngle / 2);
-        ctx.textAlign = "right";
-        ctx.fillStyle = "#2a252b";
-        ctx.font = "24px Impact";
-        ctx.fillText(options[i].label, radius - 10, 5);
-        ctx.restore();
-
-        startAngle = endAngle;
-      }
+    // 顯示初始獎項列表
+    const countMap = {};
+    prizes.forEach(p => countMap[p] = (countMap[p] || 0) + 1);
+    for (const [name, count] of Object.entries(countMap)) {
+      const li = document.createElement('li');
+      li.textContent = `${name} × ${count}`;
+      prizeListEl.appendChild(li);
     }
 
-    function spin() {
-      if (spinning) return;
-      spinning = true;
-      const duration = 4000;
-      const rotations = 5;
-      const targetDeg = Math.random() * 360;
-      const finalDeg = rotations * 360 + targetDeg;
-      const start = performance.now();
-
-      function animate(now) {
-        const elapsed = now - start;
-        const progress = Math.min(elapsed / duration, 1);
-        const easeOut = 1 - Math.pow(1 - progress, 3);
-        currentRotation = finalDeg * easeOut;
-        canvas.style.transform = `rotate(-${currentRotation}deg)`;
-
-        if (progress < 1) {
-          requestAnimationFrame(animate);
-        } else {
-          spinning = false;
-          // 以「90度方向」（正上方）來判定落點
-          const normalizedAngle = (currentRotation % 360);
-          const pointerAngle = (normalizedAngle) % 360;
-          let accumulated = 0;
-          for (let i = 0; i < options.length; i++) {
-            const angleStart = accumulated;
-            const angleEnd = accumulated + (options[i].weight / totalWeight) * 360;
-            if (pointerAngle >= angleStart && pointerAngle < angleEnd) {
-              document.getElementById("result").innerText = `選中的是：${options[i].label}`;
-              break;
-            }
-            accumulated = angleEnd;
-          }
-        }
+    // 抽獎
+    function drawPrize() {
+      if (prizes.length === 0) {
+        resultEl.textContent = '所有獎項都已抽完！';
+        return;
       }
-
-      requestAnimationFrame(animate);
+      const index = Math.floor(Math.random() * prizes.length);
+      const prize = prizes.splice(index, 1)[0];
+      resultEl.textContent = `恭喜你抽中：${prize}！`;
     }
-
-    drawWheel();
   </script>
 </body>
 </html>
