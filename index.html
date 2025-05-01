@@ -9,6 +9,7 @@
       font-family: sans-serif;
       text-align: center;
       padding: 2em;
+      background-image:url(https://images.plurk.com/2gKtxuzw9y0sNZV3V324Yq.png);
       background-color: #0a0a0a;
       font-family:Impact;
     }
@@ -18,6 +19,7 @@
     ul {
       list-style: none;
       padding: 0;
+      color: transparent;
     }
     li {
       margin: 0.3em 0;
@@ -28,11 +30,12 @@
       cursor: pointer;
       border:0;
     
-      color:0a0a0a;
+      color:#0a0a0a;
     }
     
     .bbbb{
-     padding: 4.5em 4.5em; background-image:url(https://images.plurk.com/4UB2CNUs0hf90itOxMoICZ.png);
+     padding: 4.5em 4.5em; background-image:url(https://images.plurk.com/hHFrUYO2mZMgc9ze9uqGv.png);
+     background-color: transparent;
  background-size:cover;
       border:0;
     }
@@ -55,11 +58,11 @@
     }
     #result-box {
       background-color: #c5c5c5;
-      padding: 10em 10em;
+      padding: 5em 5em;
       border-radius: 15px;
       box-shadow: 0 0 20px rgba(0,0,0,0.3);
       text-align: center;
-      font-size: 1.5em;
+      font-size: 3em;
       min-width: 300px;
       min-height: 150px;
       animation: popin 0.3s ease-out;
@@ -90,8 +93,9 @@
   <h3></h3>
   <br><br><br>
   <div>
-      <img src="https://images.plurk.com/5vhJ5HV6U6sz20yNZYIhde.png" width=80%>
+      <img src="https://images.plurk.com/1ZLslBHLOMfjK0whMkWEFu.png" width=70%>
   </div>
+  <br><br><br>
   
   <button onclick="drawPrize()" class="bbbb"></button>
   <ul id="prize-list"></ul>  
@@ -103,6 +107,9 @@
       <button id="close-btn" onclick="closeResult()" class="xxxx">X</button>
     </div>
   </div>
+
+  <div>
+    <img src="">
 
   <script>
     // 初始化獎項
