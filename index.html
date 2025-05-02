@@ -169,7 +169,7 @@
 
           // 正式抽獎
           const index = Math.floor(Math.random() * prizes.length);
-          const realPrize = prizes.splice(index, 1)[0];
+const realPrize = prizes[index];
           resultTextEl.textContent = `！${realPrize}！`;
           resultTextEl.classList.remove('highlight');
           closeBtnEl.style.display = 'inline-block';
